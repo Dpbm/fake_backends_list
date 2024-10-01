@@ -1,0 +1,8 @@
+name: providers
+channels: 
+        - conda-forge
+dependencies:
+        - pip
+        - python=3.10
+        - pip:
+          - qiskit-ibm-runtime
