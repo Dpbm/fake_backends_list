@@ -53,7 +53,13 @@ with open("index.html", 'a') as file:
             version = str(provider.version if 'version' in dir(provider) else 1)
             n_qubits = str(data['n_qubits'])
             instructions = " ".join(data['basis_gates'])
+
+            print(dir(provider))
+
             dynamic = str(data['conditional'])
+            if('_supports_dynamic_circuits' in dir(provider)):
+                dynamic = str(provider()._supports_dynamic_circuits())
+
             print(name, " ", version, " ", instructions, " ", dynamic)
 
             file.write("<tr>")
