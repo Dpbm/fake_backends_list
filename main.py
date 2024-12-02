@@ -14,7 +14,11 @@ fake_providers = list(filter(lambda x: 'Fake' in x, providers_data))
 callable_list = list(map(lambda x: getattr(providers, x), fake_providers))
 
 with open(TARGET_JSON_FILE, 'w', encoding='utf-8') as file:
-    backends_data = []
+    final_data = {
+        "max_qubits": 0,
+        "all_instructions":[],
+        "backends": []
+    }  
     for provider in callable_list:
         
         if('configuration' in dir(provider)):
@@ -36,6 +40,11 @@ with open(TARGET_JSON_FILE, 'w', encoding='utf-8') as file:
               "is_dynamic":dynamic
             }
 
-            backends_data.append(backend_data)
-    json.dump(backends_data, file, ensure_ascii=False, indent=4)
-             
+            final_data["backends"].append(backend_data)
+            final_data["all_instructions"] = list(set([*final_data["all_instructions"], *instructions]))
+            
+            if(n_qubits > final_data["max_qubits"]):
+                final_data["max_qubits"] = n_qubits
+
+    json.dump(final_data, file, ensure_ascii=False, indent=4)
+os.system(f"mv {TARGET_JSON_FILE} ./backends-list/app/{TARGET_JSON_FILE}") 
