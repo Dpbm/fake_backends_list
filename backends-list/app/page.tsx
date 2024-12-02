@@ -85,10 +85,10 @@ export default function Home() {
   backends_data = backends_data.filter((backend:Backend) => (new Set(selectedInstructions)).intersection(new Set(backend.instructions)).size > 0);
   
   return (
-    <div className="w-full flex flex-col items-center jutify-center">
-      <h1 className="text-4xl font-bold text-center p-10">Qiskit Runtime Fake Backends</h1>
+    <div className="w-full flex flex-col items:start justify-start sm:items-center sm:jutify-center">
+      <h1 className="text-4xl font-bold text-left p-10 sm:text-center">Qiskit Runtime Fake Backends</h1>
 
-      <div className="w-full flex justify-end items-end p-4">
+      <div className="w-full flex justify-start items-start p-4 sm:items-end sm:justify-end">
         <Popover>
           <PopoverTrigger asChild>
             <Button className="mx-5">
@@ -162,7 +162,7 @@ export default function Home() {
         </Select>
       </div>
 
-      <Table className="w-11/12" >
+      <Table className="w-screen sm:w-11/12 sm:overflow-auto" >
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
