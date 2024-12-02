@@ -1,0 +1,3 @@
+[tools]
+python = 'miniforge3-23.11.0-0'
+node = '23.0.0'

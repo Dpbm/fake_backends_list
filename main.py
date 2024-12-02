@@ -1,8 +1,11 @@
 import os
+import json
 import importlib.util
 import warnings
 
 warnings.filterwarnings("ignore")
+
+TARGET_JSON_FILE = "providers.json"
 
 providers = importlib.import_module('qiskit_ibm_runtime.fake_provider')
 
@@ -10,89 +13,29 @@ providers_data = dir(providers)
 fake_providers = list(filter(lambda x: 'Fake' in x, providers_data))
 callable_list = list(map(lambda x: getattr(providers, x), fake_providers))
 
-if(os.path.exists('index.html')):
-    os.system('rm index.html')
-
-with open("index.html", 'a') as file:
-    file.write('<head><link rel="stylesheet" href="styles.css"><meta name="viewport" content="width=device-width, initial-scale=1"></head>')
-    file.write("<h1>Fake Backends</h1>")
-    file.write("<table>")
-    file.write("<tr>")
-
-    file.write("<th>")
-    file.write("Name")
-    file.write("</th>")
-
-    file.write("<th>")
-    file.write("Backend Version")
-    file.write("</th>")
-
-    file.write("<th>")
-    file.write("Version(V)")
-    file.write("</th>")
-
-    file.write("<th>")
-    file.write("Total Qubits")
-    file.write("</th>")
-
-    file.write("<th>")
-    file.write("Gates")
-    file.write("</th>")
-
-    file.write("<th>")
-    file.write("Dynamic Circuits")
-    file.write("</th>")
-
-    file.write("</tr>")
-
+with open(TARGET_JSON_FILE, 'w', encoding='utf-8') as file:
+    backends_data = []
     for provider in callable_list:
         
         if('configuration' in dir(provider)):
             data = provider().configuration().to_dict()
             name = data['backend_name']
-            backend_version = str(data['backend_version'])
-            version = str(provider.version if 'version' in dir(provider) else 1)
-            n_qubits = str(data['n_qubits'])
-            instructions = " ".join(data['basis_gates'])
+            version = provider.version if 'version' in dir(provider) else 1
+            n_qubits = data['n_qubits']
+            instructions = data['basis_gates']
 
-            print(dir(provider))
-
-            dynamic = str(data['conditional'])
+            dynamic = data['conditional']
             if('_supports_dynamic_circuits' in dir(provider)):
-                dynamic = str(provider()._supports_dynamic_circuits())
+                dynamic = provider()._supports_dynamic_circuits()
+            
+            backend_data = {
+              "name":name,
+              "version":version,
+              "n_qubits":n_qubits,
+              "instructions":instructions,
+              "is_dynamic":dynamic
+            }
 
-            print(name, " ", version, " ", instructions, " ", dynamic)
-
-            file.write("<tr>")
-
-            file.write("<td>")
-            file.write(name)
-            file.write("</td>")
-
-            file.write("<td>")
-            file.write(backend_version)
-            file.write("</td>")
-
-            file.write("<td>")
-            file.write(version)
-            file.write("</td>")
-
-            file.write("<td>")
-            file.write(n_qubits)
-            file.write("</td>")
-
-            file.write("<td>")
-            file.write(instructions)
-            file.write("</td>")
-
-            file.write("<td>")
-            file.write(dynamic)
-            file.write("</td>")
-
-
-
-            file.write("</tr>")
-
-
-
-  
+            backends_data.append(backend_data)
+    json.dump(backends_data, file, ensure_ascii=False, indent=4)
+             
