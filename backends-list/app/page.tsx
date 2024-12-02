@@ -100,81 +100,84 @@ export default function Home() {
   backends_data = backends_data.filter((backend:Backend) => (new Set(selectedInstructions)).intersection(new Set(backend.instructions)).size > 0);
   
   return (
-    <>
-      <h1>Qiskit Runtime Fake Backends</h1>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button>
-            <Filter></Filter>
-          </Button>
+    <div className="w-full flex flex-col items-center jutify-center">
+      <h1 className="text-4xl font-bold text-center p-10">Qiskit Runtime Fake Backends</h1>
 
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="flex items-center">
-            <Label htmlFor="versions">Version</Label>
-            <Select id="versions" onValueChange={setSelectedVersion}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select the version" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {
-                    versionsOptions.map((version:string)=><SelectItem key={version} value={version}>{version}</SelectItem>)
-                  }
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center">
-            <Label htmlFor="dyanmic">Is Dynamic</Label>
-            <Select id="dynamic" onValueChange={setSelectedDynamic}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select the dynamic Backend" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {
-                    dynamicOptions.map((dynamic:string)=><SelectItem key={dynamic} value={dynamic}>{dynamic}</SelectItem>)
-                  }
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center">
-            <Label htmlFor="qubits">Max Number of Qubits</Label>
-            <Input 
-              type="number" 
-              id="qubits" 
-              min="1" 
-              max={String(data.max_qubits)} 
-              defaultValue={String(selectedNumQubits)}
-              placeholder="Max Number of qubits" 
-              onChange={(event) => setSelectedNumQubits(parseInt(event.target.value) || data.max_qubits)}/>
-          </div>
-          <div className="flex items-center">
-            <Label htmlFor="instructions">Select Instructions</Label>
-            <ToggleGroup type="multiple" onValueChange={setSelectedInstructions} defaultValue={selectedInstructions}>
-              {
-                [...data.all_instructions].map((instruction:string) => <ToggleGroupItem key={instruction} value={instruction}>{instruction.toUpperCase()}</ToggleGroupItem>)
-              }
-            </ToggleGroup>
-          </div>
-        </PopoverContent>
-      </Popover>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button>
-            <ArrowUpDown/>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuRadioGroup value={sortingOrder} onValueChange={setSortingOrder}>
-            {sortingOptions.map((option:string) => <DropdownMenuRadioItem key={option} value={option}>{option}</DropdownMenuRadioItem>)}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <Table>
-        <TableCaption>Fake Backends List Data</TableCaption>
+      <div className="w-full flex justify-end items-end p-4">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className="mx-5">
+              Filter<Filter/>
+            </Button>
+
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="flex my-2">
+              <Label htmlFor="versions" className="m-2">Version</Label>
+              <Select id="versions" onValueChange={setSelectedVersion}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select the version" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {
+                      versionsOptions.map((version:string)=><SelectItem key={version} value={version}>{version}</SelectItem>)
+                    }
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex my-2">
+              <Label htmlFor="dyanmic" className="m-2">Is Dynamic</Label>
+              <Select id="dynamic" onValueChange={setSelectedDynamic}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select the dynamic Backend" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {
+                      dynamicOptions.map((dynamic:string)=><SelectItem key={dynamic} value={dynamic}>{dynamic}</SelectItem>)
+                    }
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex my-2">
+              <Label htmlFor="qubits" className="m-2">Max Number of Qubits</Label>
+              <Input 
+                type="number" 
+                id="qubits" 
+                min="1" 
+                max={String(data.max_qubits)} 
+                defaultValue={String(selectedNumQubits)}
+                placeholder="Max Number of qubits" 
+                onChange={(event) => setSelectedNumQubits(parseInt(event.target.value) || data.max_qubits)}/>
+            </div>
+            <div className="flex flex-col">
+              <Label htmlFor="instructions">Select Instructions</Label>
+              <ToggleGroup type="multiple" onValueChange={setSelectedInstructions} defaultValue={selectedInstructions} className="w-full flex justify-start flex-wrap mt-2">
+                {
+                  [...data.all_instructions].map((instruction:string) => <ToggleGroupItem key={instruction} value={instruction}>{instruction.toUpperCase()}</ToggleGroupItem>)
+                }
+              </ToggleGroup>
+            </div>
+          </PopoverContent>
+        </Popover>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="mx-5">
+              Sort <ArrowUpDown/>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuRadioGroup value={sortingOrder} onValueChange={setSortingOrder}>
+              {sortingOptions.map((option:string) => <DropdownMenuRadioItem key={option} value={option}>{option}</DropdownMenuRadioItem>)}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Table className="w-11/12" >
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
@@ -199,8 +202,9 @@ export default function Home() {
           }
 
         </TableBody>
+        <TableCaption>Fake Backends List Data. Checkout <a href="https://docs.quantum.ibm.com/api/qiskit-ibm-runtime/fake_provider" target="_blank">Qiskit Runtime Providers</a></TableCaption>
       </Table>
 
-    </>
+    </div>
   );
 }

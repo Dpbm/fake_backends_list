@@ -1,21 +1,21 @@
 {
     "max_qubits": 133,
     "all_instructions": [
-        "rz",
-        "u",
-        "u3",
-        "cx",
+        "cz",
+        "u1",
+        "reset",
         "ecr",
+        "id",
+        "x",
+        "cx",
+        "u",
+        "rz",
+        "u3",
         "sx",
         "rzx",
-        "id",
         "u2",
-        "p",
-        "cz",
-        "x",
-        "reset",
-        "u1",
-        "rx"
+        "rx",
+        "p"
     ],
     "backends": [
         {
