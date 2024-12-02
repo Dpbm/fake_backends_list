@@ -10,13 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -28,15 +21,13 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {Filter  } from 'react-feather';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ArrowUpDown } from 'lucide-react';
+import { Filter } from 'react-feather';
 
 import data from './providers.json';
 
@@ -48,15 +39,9 @@ type Backend = {
   instructions: string[];
 }
 
-type Data = {
-  max_qubits: number;
-  all_instructions: string[];
-  backends: Backend[];
-}
-
 const versionsOptions = ['all', 'v1', 'v2'];
 const dynamicOptions = ['all', 'yes', 'no'];
-const sortingOptions = ['default', 'ascending qubits number', 'descending qubits number'];
+const sortingOptions = ['default order', 'ascending qubits number', 'descending qubits number'];
 
 
 function ascending(backend1:Backend, backend2:Backend){
@@ -114,7 +99,7 @@ export default function Home() {
           <PopoverContent>
             <div className="flex my-2">
               <Label htmlFor="versions" className="m-2">Version</Label>
-              <Select id="versions" onValueChange={setSelectedVersion}>
+              <Select onValueChange={setSelectedVersion}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select the version" />
                 </SelectTrigger>
@@ -129,7 +114,7 @@ export default function Home() {
             </div>
             <div className="flex my-2">
               <Label htmlFor="dyanmic" className="m-2">Is Dynamic</Label>
-              <Select id="dynamic" onValueChange={setSelectedDynamic}>
+              <Select onValueChange={setSelectedDynamic}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select the dynamic Backend" />
                 </SelectTrigger>
@@ -163,18 +148,18 @@ export default function Home() {
             </div>
           </PopoverContent>
         </Popover>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="mx-5">
-              Sort <ArrowUpDown/>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuRadioGroup value={sortingOrder} onValueChange={setSortingOrder}>
-              {sortingOptions.map((option:string) => <DropdownMenuRadioItem key={option} value={option}>{option}</DropdownMenuRadioItem>)}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Select onValueChange={setSortingOrder}>
+          <SelectTrigger className="w-[250px]">
+            <SelectValue placeholder="Sorting Order" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {
+                sortingOptions.map((option:string)=><SelectItem key={option} value={option}>{option}</SelectItem>)
+              }                                                     
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <Table className="w-11/12" >
@@ -202,7 +187,7 @@ export default function Home() {
           }
 
         </TableBody>
-        <TableCaption>Fake Backends List Data. Checkout <a href="https://docs.quantum.ibm.com/api/qiskit-ibm-runtime/fake_provider" target="_blank">Qiskit Runtime Providers</a></TableCaption>
+        <TableCaption>Fake Backends List Data. Check <a href="https://docs.quantum.ibm.com/api/qiskit-ibm-runtime/fake_provider" target="_blank">Qiskit Runtime Providers</a></TableCaption>
       </Table>
 
     </div>
