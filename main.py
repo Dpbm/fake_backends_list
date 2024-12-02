@@ -14,6 +14,7 @@ if(os.path.exists('index.html')):
     os.system('rm index.html')
 
 with open("index.html", 'a') as file:
+    file.write('<head><link rel="stylesheet" href="styles.css"><meta name="viewport" content="width=device-width, initial-scale=1"></head>')
     file.write("<h1>Fake Backends</h1>")
     file.write("<table>")
     file.write("<tr>")
